@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Flower2,
   Heart,
@@ -27,6 +27,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     // Hide welcome screen automatically after 3.5 seconds
@@ -56,9 +57,30 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleFirstClick = () => {
+      if (audioRef.current) {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+      window.removeEventListener("click", handleFirstClick);
+    };
+
+    window.addEventListener("click", handleFirstClick);
+  }, []);
+
   const toggleAudio = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch((err) => {
+        console.log("Audio play error:", err);
+      });
+    }
+
     setIsPlaying(!isPlaying);
-    // Add actual audio play/pause logic here
   };
 
   const handleShare = async () => {
@@ -89,12 +111,15 @@ export default function App() {
     cornerFlower: "assets/cornerflower.png", // <-- અહી કોર્નર ફૂલની લિંક મૂકો
     coupleDivider: "assets/hand.png", // <-- નામો વચ્ચેની ઈમેજ (Rings/Heart) અહી મૂકો
     shubhVivahImage: "assets/shubhvivah.png",
-    shreeGaneshayNamahImage: "assets/shreeganesh.png" // <-- શ્રી ગણેશાય નમઃ ઈમેજ લિંક
+    shreeGaneshayNamahImage: "assets/shreeganesh.png", // <-- શ્રી ગણેશાય નમઃ ઈમેજ લિંક
   };
 
   return (
     // Outer Container: Full screen on mobile, gray background with padding on desktop
     <div className="min-h-screen bg-[#e8e6e1] flex justify-center py-0 sm:py-6 md:py-10 font-gujarati antialiased selection:bg-[#d4af37] selection:text-[#8b0000]">
+      <audio ref={audioRef} loop>
+        <source src="/music.mp3" type="audio/mpeg" />
+      </audio>
       {/* Welcome Splash Screen (Mobile Responsive) */}
       <div
         onClick={() => setShowWelcome(false)}
@@ -116,16 +141,17 @@ export default function App() {
             />
           </div>
           <div className="flex justify-center w-full px-4 mb-2">
-              <img 
-                src={customImages.shreeGaneshayNamahImage} 
-                alt="શ્રી ગણેશાય નમઃ" 
-                className="w-full max-w-[200px] sm:max-w-[250px] h-auto object-contain drop-shadow-sm"
-                onError={(e) => { 
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement.innerHTML = '<h2 class="text-lg sm:text-xl font-bold text-[#8b0000] mb-2 tracking-wider">॥ શ્રી ગણેશાય નમઃ ॥</h2>';
-                }}
-              />
-            </div>
+            <img
+              src={customImages.shreeGaneshayNamahImage}
+              alt="શ્રી ગણેશાય નમઃ"
+              className="w-full max-w-[200px] sm:max-w-[250px] h-auto object-contain drop-shadow-sm"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+                e.currentTarget.parentElement.innerHTML =
+                  '<h2 class="text-lg sm:text-xl font-bold text-[#8b0000] mb-2 tracking-wider">॥ શ્રી ગણેશાય નમઃ ॥</h2>';
+              }}
+            />
+          </div>
           <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent my-2 sm:my-3"></div>
           {/* Responsive Font Sizing for Title */}
           <h1 className="text-2xl sm:text-4xl font-bold text-[#8b0000] tracking-widest sm:tracking-wider font-elegant mt-2 px-2 leading-tight">
@@ -277,29 +303,29 @@ export default function App() {
           <div className="absolute inset-[2px] sm:inset-[3px] rounded-md sm:rounded-lg border border-[#8b0000]/80"></div>
         </div>
 
-       <img
-  src={customImages.cornerFlower}
-  alt="Corner Floral"
-  className="absolute top-0 left-0 sm:top-1 sm:left-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm"
-/>
+        <img
+          src={customImages.cornerFlower}
+          alt="Corner Floral"
+          className="absolute top-0 left-0 sm:top-1 sm:left-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm"
+        />
 
-<img
-  src={customImages.cornerFlower}
-  alt="Corner Floral"
-  className="absolute top-0 right-0 sm:top-1 sm:right-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-x-[-1]"
-/>
+        <img
+          src={customImages.cornerFlower}
+          alt="Corner Floral"
+          className="absolute top-0 right-0 sm:top-1 sm:right-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-x-[-1]"
+        />
 
-<img
-  src={customImages.cornerFlower}
-  alt="Corner Floral"
-  className="absolute bottom-0 left-0 sm:bottom-1 sm:left-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-y-[-1]"
-/>
+        <img
+          src={customImages.cornerFlower}
+          alt="Corner Floral"
+          className="absolute bottom-0 left-0 sm:bottom-1 sm:left-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-y-[-1]"
+        />
 
-<img
-  src={customImages.cornerFlower}
-  alt="Corner Floral"
-  className="absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-x-[-1] scale-y-[-1]"
-/>
+        <img
+          src={customImages.cornerFlower}
+          alt="Corner Floral"
+          className="absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-28 sm:w-32 md:w-40 z-40 pointer-events-none opacity-95 drop-shadow-sm transform scale-x-[-1] scale-y-[-1]"
+        />
 
         {/* Animated Falling Petals (Sticky inside card to clip properly) */}
         <div className="absolute top-0 bottom-0 left-0 w-full pointer-events-none z-0">
@@ -351,13 +377,14 @@ export default function App() {
             </div>
 
             <div className="flex justify-center w-full px-4 mb-2">
-              <img 
-                src={customImages.shreeGaneshayNamahImage} 
-                alt="શ્રી ગણેશાય નમઃ" 
+              <img
+                src={customImages.shreeGaneshayNamahImage}
+                alt="શ્રી ગણેશાય નમઃ"
                 className="w-full max-w-[200px] sm:max-w-[250px] h-auto object-contain drop-shadow-sm"
-                onError={(e) => { 
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement.innerHTML = '<h2 class="text-lg sm:text-xl font-bold text-[#8b0000] mb-2 tracking-wider">॥ શ્રી ગણેશાય નમઃ ॥</h2>';
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.parentElement.innerHTML =
+                    '<h2 class="text-lg sm:text-xl font-bold text-[#8b0000] mb-2 tracking-wider">॥ શ્રી ગણેશાય નમઃ ॥</h2>';
                 }}
               />
             </div>
@@ -366,14 +393,15 @@ export default function App() {
               શુભવિવાહ
             </h1> */}
             <div className="flex justify-center w-full px-4 py-2 sm:py-4">
-              <img 
-                src={customImages.shubhVivahImage} 
-                alt="શુભવિવાહ" 
+              <img
+                src={customImages.shubhVivahImage}
+                alt="શુભવિવાહ"
                 className="w-full max-w-[280px] sm:max-w-[350px] h-auto object-contain drop-shadow-lg"
-                onError={(e) => { 
+                onError={(e) => {
                   // Fallback to text if image fails
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement.innerHTML = '<h1 class="text-5xl sm:text-6xl font-bold red-title-text tracking-wider font-cursive pt-4 pb-4">શુભવિવાહ</h1>';
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.parentElement.innerHTML =
+                    '<h1 class="text-5xl sm:text-6xl font-bold red-title-text tracking-wider font-cursive pt-4 pb-4">શુભવિવાહ</h1>';
                 }}
               />
             </div>
@@ -871,7 +899,8 @@ export default function App() {
               fill="currentColor"
             />{" "}
             for the Talaviya Family
-          </p><br/>
+          </p>
+          <br />
           <p className="text-[10px] sm:text-xs text-gray-400 font-sans flex items-center justify-center gap-2">
             By
             <span className="text-[#d4af37] font-semibold">Dezin Valley</span>
