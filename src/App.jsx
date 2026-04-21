@@ -616,7 +616,7 @@ export default function App() {
                 icon={<Flame size={20} className="sm:w-6 sm:h-6" />}
                 title="॥ મંડપ મુહુર્ત ॥"
                 date="તા. ૦૧-૦૫-૨૦૨૬"
-                time="શુક્રવાર, સવારે ૯:૦૦ કલાકે"
+                time="શુક્રવાર, સવારે ૭:૦૦ કલાકે"
                 location="(રાધેશ્યામ વાડી ગોંડલ)"
                 delay="100"
               />
